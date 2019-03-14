@@ -1,13 +1,19 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import { Joke } from '../components/Joke';
-import { JokeSearch } from '../components/JokeSearch';
+import { Card } from '../components/molecules/Card';
+import { SearchForm } from '../components/molecules/SearchForm';
 
 import { startFetchJokes, clearJokes } from './actions';
 import { jokes as selectJokes } from './selectors';
 
-// `npm install --save react-redux redux`
+// 'npm install --save emotion @emotion/core emotion-theming styled-system'
+// move to atoms - Text, Input, Icon
+// move to molecules - Card, SearchFrom
+// try prop - fontSize of Text
+// try ThemeProvider
+
+// `npm install --save react-redux redux redux-thunk`
 // same as previous example
 // create custom CLEAR action to handle when filter is less than 3 characters
 
@@ -26,11 +32,11 @@ const JokesBase = ({ jokes, fetchJokes, clearJokes }) => {
 
     return (
         <Fragment>
-            <JokeSearch 
+            <SearchForm 
                 onChange={handleOnChange}
             />
             {jokes.map(
-                joke => <Joke key={joke.id} {...joke} />
+                joke => <Card key={joke.id} text={joke.value} icon={joke.icon_url} />
             )}
         </Fragment>
     )
