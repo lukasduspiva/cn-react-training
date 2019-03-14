@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import { Joke } from '../components/Joke';
 import { JokeSearch } from '../components/JokeSearch';
+
+import { startFetchJokes, clearJokes } from './actions';
+import { jokes as selectJokes } from './selectors';
+
+// `npm install --save react-redux redux`
+// same as previous example
+// create custom CLEAR action to handle when filter is less than 3 characters
 
 // Using https://api.chucknorris.io/
 // Goal: app for searching database of jokes
@@ -9,37 +17,34 @@ import { JokeSearch } from '../components/JokeSearch';
 //  - display results
 //  - when clearing filer string - clearing results
 
-const Jokes = () => {
+const JokesBase = ({ jokes, fetchJokes, clearJokes }) => {
 
-    const [filter, setFilter ] = useState(''); 
-    const [jokes, setJokes ] = useState([]); 
-
-    const handleUsersChange = jokes => setJokes(jokes);
-    const handleInputChange = e => setFilter(e.target.value);
-
-    useEffect(() => {
-        if (filter.length >= 3) {
-            fetch(`https://api.chucknorris.io/jokes/search?query=${filter}`)
-            .then(response => response.json())
-            .then(myJson => handleUsersChange(myJson.result))
-            .catch(error => console.log(error));
-        }
-        if (filter.length < 3) {
-            handleUsersChange([]);
-        }
-    }, [filter]);
+    const handleOnChange = (e) => {
+        const { value } = e.target;
+        value.length >= 3 ? fetchJokes(value) : clearJokes();
+    };
 
     return (
-        <div>
+        <Fragment>
             <JokeSearch 
-                onChange={handleInputChange}
-                value={filter}
+                onChange={handleOnChange}
             />
             {jokes.map(
                 joke => <Joke key={joke.id} {...joke} />
             )}
-        </div>
+        </Fragment>
     )
 };
+
+const mapStateToProps = (state) => ({
+    jokes: selectJokes(state.jokes),
+});
+
+const mapDispatchToProps = ({
+    fetchJokes: startFetchJokes,
+    clearJokes,
+})
+
+const Jokes = connect(mapStateToProps, mapDispatchToProps)(JokesBase);
 
 export { Jokes };

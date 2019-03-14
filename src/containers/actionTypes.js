@@ -1,0 +1,4 @@
+export const JOKES_FETCH = 'JOKES.FETCH';
+export const JOKES_FETCH_SUCCESS = 'JOKES.FETCH.SUCCESS';
+export const JOKES_FETCH_ERROR = 'JOKES.FETCH.ERROR';
+export const JOKES_CLEAR = 'JOKES.CLEAR';
